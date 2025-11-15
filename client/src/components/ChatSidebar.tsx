@@ -14,7 +14,7 @@ export default function ChatSidebar({
   onSelect,
 }: {
   reminders: string[];
-  onSelect: (page: "friends" | "settings") => void;
+  onSelect: (page: "home" | "settings") => void;
 }) {
   const [collapsed, setCollapsed] = useState(false);
 
@@ -53,7 +53,7 @@ export default function ChatSidebar({
         <div className="flex flex-col items-center mt-6 gap-6 text-[#8B5E34]">
           <CollapseIcon
             icon={<Users className="w-7 h-7" />}
-            onClick={() => onSelect("friends")}
+            onClick={() => onSelect("home")}
           />
           <CollapseIcon
             icon={<Settings className="w-7 h-7" />}
@@ -67,8 +67,8 @@ export default function ChatSidebar({
         <div className="flex-1 px-5 py-4 space-y-4 overflow-y-auto">
           <SidebarItem
             icon={<Users className="w-6 h-6 text-[#8B5E34]" />}
-            label="Friends"
-            onClick={() => onSelect("friends")}
+            label="Home"
+            onClick={() => onSelect("home")}
           />
 
           <SidebarItem
@@ -124,5 +124,3 @@ function CollapseIcon({
     </button>
   );
 }
-
-

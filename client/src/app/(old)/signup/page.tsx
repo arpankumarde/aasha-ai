@@ -13,32 +13,10 @@ export default function SignupPage() {
   const [password, setPassword] = useState("")
   const [agree, setAgree] = useState(false)
 
-  // Signup page - update handleSignup
-const handleSignup = async (e: React.FormEvent) => {
-  e.preventDefault()
-  try {
-    const res = await fetch("/api/auth/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, password }),
-    })
-
-    const data = await res.json()
-    if (!res.ok) throw new Error(data.error || "Signup failed")
-
-    // notify other client components to re-check auth
-    window.dispatchEvent(new Event("userChanged"))
-
-    alert(`Welcome to Aashaa, ${data.user.name}! 🌿`)
-
-    router.push("/")
-    router.refresh()
-  } catch (err: any) {
-    alert(err.message)
+  const handleSignup = async (e: React.FormEvent) => {
+    e.preventDefault()
+    alert(`Signup functionality coming soon!`)
   }
-}
-
-
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-linear-to-b from-sky-50 to-white px-6">
@@ -91,7 +69,6 @@ const handleSignup = async (e: React.FormEvent) => {
             </div>
           </div>
 
-          {/* Checkbox */}
           <div className="flex items-center gap-2 text-sm text-gray-600">
             <input
               type="checkbox"

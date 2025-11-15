@@ -429,7 +429,9 @@ const ChatPanel = ({ onStartChat }) => {
               Aashaa Assistant
             </div>
           </div>
-          <div className="text-xs text-stone-500">Be kind to yourself today ♡</div>
+          <div className="text-xs text-stone-500">
+            Be kind to yourself today ♡
+          </div>
         </div>
 
         {/* Messages */}
@@ -492,7 +494,12 @@ const MoodTracker = () => (
     <div className="h-36">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={moodData} margin={{ left: 0, right: 0, top: 10 }}>
-          <XAxis dataKey="day" tickLine={false} axisLine={false} stroke="#78716c" />
+          <XAxis
+            dataKey="day"
+            tickLine={false}
+            axisLine={false}
+            stroke="#78716c"
+          />
           <YAxis hide domain={[0, 5]} />
           <Tooltip
             contentStyle={{
@@ -722,17 +729,15 @@ export default function MentalWellnessDashboard() {
       <header className="sticky top-0 z-10 border-b border-stone-300/70 bg-[#F6F0E6]/80 backdrop-blur supports-[backdrop-filter]:bg-[#F6F0E6]/60">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
           <div className="flex items-center gap-2">
-            <div
-      className="flex items-center gap-2 group cursor-pointer select-none"
-    >
-      <div className="relative flex items-center justify-center w-10 h-10 rounded-2xl bg-linear-to-b from-amber-300 to-amber-500 text-white shadow-md group-hover:scale-110 transition-transform">
-        <MessageSquareHeart className="w-5 h-5 absolute opacity-80" />
-        <HeartHandshake className="w-4 h-4 absolute -bottom-1 -right-1 opacity-70" />
-      </div>
-      <span className="text-2xl font-bold bg-linear-to-b from-[#6B4F4F] to-[#4B3A34] bg-clip-text text-transparent tracking-wide">
-        aashaa
-      </span>
-    </div>
+            <div className="flex items-center gap-2 group cursor-pointer select-none">
+              <div className="relative flex items-center justify-center w-10 h-10 rounded-2xl bg-linear-to-b from-amber-300 to-amber-500 text-white shadow-md group-hover:scale-110 transition-transform">
+                <MessageSquareHeart className="w-5 h-5 absolute opacity-80" />
+                <HeartHandshake className="w-4 h-4 absolute -bottom-1 -right-1 opacity-70" />
+              </div>
+              <span className="text-2xl font-bold bg-linear-to-b from-[#6B4F4F] to-[#4B3A34] bg-clip-text text-transparent tracking-wide">
+                aashaa
+              </span>
+            </div>
             <span className="text-sm font-semibold tracking-wide text-stone-800">
               Aashaa — Your mental wellness
             </span>
@@ -754,10 +759,12 @@ export default function MentalWellnessDashboard() {
       <main className="mx-auto max-w-7xl px-4 py-6">
         {/* Chat Section */}
         <div className="mb-4 grid grid-cols-12 gap-4">
-          <ChatPanel onStartChat={() => {
-    setChatStarted(true);
-    localStorage.setItem("chat-started", "true");
-  }} />
+          <ChatPanel
+            onStartChat={() => {
+              setChatStarted(true);
+              localStorage.setItem("chat-started", "true");
+            }}
+          />
         </div>
 
         {/* Hide widgets after chat starts */}
@@ -803,6 +810,3 @@ export default function MentalWellnessDashboard() {
     </div>
   );
 }
-
-
-

@@ -11,33 +11,10 @@ export default function LoginPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
-  // Login page - update handleLogin
-const handleLogin = async (e: React.FormEvent) => {
-  e.preventDefault()
-  try {
-    const res = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    })
-
-    const data = await res.json()
-    if (!res.ok) throw new Error(data.error || "Login failed")
-
-    // notify other client components to re-check auth
-    window.dispatchEvent(new Event("userChanged"))
-
-    alert(`Welcome back, ${data.user.name}! 💙`)
-
-    // navigate and refresh if needed
-    router.push("/")
-    router.refresh()
-  } catch (err: any) {
-    alert(err.message)
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault()
+    alert(`Login functionality coming soon!`)
   }
-}
-
-
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-linear-to-b from-sky-50 to-white px-6">
@@ -85,7 +62,7 @@ const handleLogin = async (e: React.FormEvent) => {
         </form>
 
         <p className="text-center text-sm text-gray-600 mt-6">
-          Don’t have an account?{" "}
+          Don't have an account?{" "}
           <span
             className="text-sky-600 font-semibold hover:underline cursor-pointer"
             onClick={() => router.push("/signup")}
