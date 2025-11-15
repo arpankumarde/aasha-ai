@@ -5,7 +5,6 @@ import os
 import json
 from datetime import datetime, timezone
 from langchain_openai import OpenAIEmbeddings
-from langchain_mongodb import MongoDBAtlasVectorSearch
 
 # from transformers import pipeline
 import requests
@@ -22,11 +21,6 @@ db = mongo_client[MONGO_DATABASE_NAME]
 collection = db["scheduler"]
 
 embedder = OpenAIEmbeddings(model="text-embedding-3-small")
-vector_store = MongoDBAtlasVectorSearch(
-    embedding=embedder,
-    collection="history",
-    relevance_score_fn="cosine",
-)
 
 # try:
 #     sent_clf = pipeline(
