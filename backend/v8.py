@@ -4,8 +4,11 @@ from pymongo import MongoClient
 import os
 import json
 from datetime import datetime, timezone
+import numpy as np
 from langchain_openai import OpenAIEmbeddings
 from langchain_mongodb import MongoDBAtlasVectorSearch
+from flask import Flask, jsonify, request
+import argparse
 
 # from transformers import pipeline
 import requests
@@ -21,8 +24,10 @@ mongo_client = MongoClient(MONGO_URI)
 db = mongo_client[MONGO_DATABASE_NAME]
 collection = db["scheduler"]
 history_collection = db["history"]
+memory_collection = db["memory"]
 
 embedder = OpenAIEmbeddings(model="text-embedding-3-small")
+app = Flask(__name__)
 
 # try:
 #     sent_clf = pipeline(
@@ -115,6 +120,54 @@ Example Output:
         return "Error creating task."
 
 
+def cosine_similarity(vec1, vec2) -> float:
+    """Compute cosine similarity between two embedding vectors."""
+
+    v1 = np.array(vec1, dtype=float)
+    v2 = np.array(vec2, dtype=float)
+    denom = np.linalg.norm(v1) * np.linalg.norm(v2)
+    if denom == 0:
+        return 0.0
+    return float(np.dot(v1, v2) / denom)
+
+
+SIMILARITY_THRESHOLD = 0.5
+
+
+def fetch_relevant_memories(query_embedding, top_k: int = 3):
+    """Return the most relevant memories comparing cosine similarity."""
+
+    if not query_embedding:
+        return []
+    scored_memories = []
+    try:
+        for memory_doc in memory_collection.find({"embedding": {"$exists": True}}):
+            embedding = memory_doc.get("embedding")
+            if not embedding:
+                continue
+            similarity = cosine_similarity(query_embedding, embedding)
+            scored_memories.append((similarity, memory_doc))
+    except Exception as fetch_err:
+        print("Error fetching memories:", fetch_err)
+        return []
+    scored_memories.sort(key=lambda x: x[0], reverse=True)
+    top_memories = [
+        doc for score, doc in scored_memories[:top_k] if score >= SIMILARITY_THRESHOLD
+    ]
+    return top_memories
+
+
+def format_memory_context(memories):
+    if not memories:
+        return ""
+    lines = ["Relevant memory context:"]
+    for idx, mem in enumerate(memories, 1):
+        mem_type = mem.get("type", "STM")
+        phrase = mem.get("phrase", "")
+        lines.append(f"{idx}. ({mem_type}) {phrase}")
+    return "\n".join(lines)
+
+
 def fetch_recent_history(limit: int = 5):
     """Fetch the most recent chat turns for context."""
 
@@ -148,6 +201,11 @@ def call_chat_model(prompt: str) -> str:
         str: The model's response.
     """
     # print("Calling chat model with prompt:", prompt)
+    try:
+        query_embedding = embedder.embed_query(prompt)
+    except Exception as embed_err:
+        print("Error embedding prompt for retrieval:", embed_err)
+        query_embedding = None
     sorted_mem = extract_memory(prompt)
     if sorted_mem["store"]:
         try:
@@ -159,7 +217,6 @@ def call_chat_model(prompt: str) -> str:
                 "embedding": embeddings,
                 "created_at": datetime.now(timezone.utc).isoformat(),
             }
-            memory_collection = db["memory"]
             memory_collection.insert_one(mem_doc)
 
             send_type = sorted_mem.get("type", "")
@@ -189,8 +246,15 @@ def call_chat_model(prompt: str) -> str:
         model="obvix-wellness-v3",
         openai_api_base="https://llm.apps.growsoc.com/v1",
         max_completion_tokens=200,
-        temperature=0.7,
+        temperature=0.4,
+        top_p=0.9
     )
+    relevant_memories = fetch_relevant_memories(query_embedding)
+    memory_context = format_memory_context(relevant_memories)
+    context_messages = (
+        [{"role": "system", "content": memory_context}] if memory_context else []
+    )
+
     history_messages = [
         {"role": turn.get("role", "user"), "content": turn.get("message", "")}
         for turn in fetch_recent_history()
@@ -243,9 +307,14 @@ You are a Aasha, a compassionate and grounded emotional support companion. Your 
 - Don't offer medical or psychiatric advice
 """,
         },
+        *context_messages,
         *history_messages,
         {"role": "user", "content": prompt},
     ]
+    try:
+        print("LLM request messages:", json.dumps(messages, ensure_ascii=False))
+    except Exception as log_err:
+        print("Failed to log LLM request:", log_err)
     response = model.invoke(messages)
     return response.content
 
@@ -342,23 +411,59 @@ def route_and_respond(prompt: str) -> str:
         return response
 
 
-# Test the routing
-try:
-    while True:
-        user_input = input("\nYou: ").strip()
-        if not user_input:
-            continue
-        if user_input.lower() in {"exit", "quit"}:
-            print("Goodbye.")
-            break
-        try:
-            response = route_and_respond(user_input)
-        except Exception as e:
-            print("Error handling request:", e)
-            continue
-        print("Aasha:", response)
-except KeyboardInterrupt:
-    print("\nSession ended.")
+@app.post("/chat")
+def chat_endpoint():
+    """HTTP endpoint for chat interactions with history persistence."""
+    payload = request.get_json(silent=True) or {}
+    message = payload.get("message", "").strip()
+    if not message:
+        return jsonify({"error": "message is required"}), 400
+    try:
+        response = route_and_respond(message)
+    except Exception as err:
+        print("Error handling /chat request:", err)
+        return jsonify({"error": "failed to generate response"}), 500
+    return jsonify({"response": response})
+
+
+def run_cli():
+    """Command-line interaction loop for manual testing."""
+    try:
+        while True:
+            user_input = input("\nYou: ").strip()
+            if not user_input:
+                continue
+            if user_input.lower() in {"exit", "quit"}:
+                print("Goodbye.")
+                break
+            try:
+                response = route_and_respond(user_input)
+            except Exception as e:
+                print("Error handling request:", e)
+                continue
+            print("Aasha:", response)
+    except KeyboardInterrupt:
+        print("\nSession ended.")
+
+
+def run_flask():
+    """Start the Flask server."""
+    port = int(os.getenv("PORT", 5001))
+    app.run(host="0.0.0.0", port=port)
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Aasha AI backend interface")
+    parser.add_argument(
+        "--flask",
+        action="store_true",
+        help="Run the Flask server instead of the interactive CLI.",
+    )
+    args = parser.parse_args()
+    if args.flask:
+        run_flask()
+    else:
+        run_cli()
 
 
 # result = route_and_respond("I feel depressed and anxious.")
