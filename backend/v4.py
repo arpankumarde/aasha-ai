@@ -1,7 +1,22 @@
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
+from pymongo import MongoClient
+import os
+import json
+from datetime import datetime
 
 load_dotenv()
+
+# MongoDB connection
+MONGO_URI = os.getenv("MONGO_URI")
+MONGO_DATABASE_NAME = os.getenv("MONGO_DATABASE_NAME")
+MONGO_COLLECTION_NAME = os.getenv("MONGO_COLLECTION_NAME")
+
+mongo_client = MongoClient(MONGO_URI)
+db = mongo_client[MONGO_DATABASE_NAME]
+collection = db[MONGO_COLLECTION_NAME]
+
+print(f"Connected to MongoDB collection: {MONGO_COLLECTION_NAME}")
 
 
 def call_task_model(prompt: str) -> str:
@@ -13,9 +28,51 @@ def call_task_model(prompt: str) -> str:
     Returns:
         str: The model's response.
     """
-    # model = ChatOpenAI(model="gpt-5-mini", max_completion_tokens=200)
-    # response = model.invoke(prompt)
-    return "TASK CREATED BY #234"
+    # Add current timestamp to the prompt for context
+    current_timestamp = datetime.now().isoformat() + "Z"
+    prompt_with_context = f"{prompt}\n\n[Current Timestamp: {current_timestamp}]"
+
+    # Extract task details from the prompt
+    print("Extracting task details from prompt:", prompt_with_context)
+    model = ChatOpenAI(
+        model="gpt-4o",
+        max_completion_tokens=200,
+        temperature=0.2,
+    )
+    messages = [
+        {
+            "role": "system",
+            "content": """
+You are a task extraction assistant. Your job is to extract the task phrase and the timestamp from the user's prompt and return them in a structured JSON format. If no timestamp is explicitly mentioned, infer it based on the context.
+The phrase should be a concise message to be sent to be user. It should be in 3rd person format. example: "Call john about the meeting" instead of "Remind me to call John".
+Example Output:
+{
+    "phrase": "Call john about the meeting",
+    "timestamp": "2023-10-01T17:00:00Z"
+}
+""",
+        },
+        {"role": "user", "content": prompt_with_context},
+    ]
+
+    response = model.invoke(messages)
+    task_data = response.content
+    print("Task model response:", task_data)
+
+    # Parse the response and save to MongoDB
+    try:
+        task_dict = json.loads(
+            task_data
+        )  # Assuming the model returns a valid JSON string
+        if "phrase" in task_dict and "timestamp" in task_dict:
+            collection.insert_one(task_dict)
+            print("Task saved to MongoDB:", task_dict)
+            return f"TASK CREATED: {task_dict['phrase']} at {task_dict['timestamp']}"
+        else:
+            return "Failed to extract task details."
+    except Exception as e:
+        print("Error processing task data:", e)
+        return "Error creating task."
 
 
 def call_chat_model(prompt: str) -> str:
@@ -38,7 +95,7 @@ def call_chat_model(prompt: str) -> str:
         {
             "role": "system",
             "content": """
-You are a Aasha, a female compassionate and grounded emotional support companion. Your role is to help people navigate emotionally challenging moments with warmth, clarity, and genuine care.
+You are a Aasha, a compassionate and grounded emotional support companion. Your role is to help people navigate emotionally challenging moments with warmth, clarity, and genuine care.
 
 **Your Core Responsibilities:**
 
@@ -133,8 +190,23 @@ def route_and_respond(prompt: str) -> str:
 
 
 # Test the routing
-result = route_and_respond("Remind me I have a meeting tomorrow at 5:00 PM")
-print("Task request result:", result)
+try:
+    while True:
+        user_input = input("\nYou: ").strip()
+        if not user_input:
+            continue
+        if user_input.lower() in {"exit", "quit"}:
+            print("Goodbye.")
+            break
+        try:
+            response = route_and_respond(user_input)
+        except Exception as e:
+            print("Error handling request:", e)
+            continue
+        print("Aasha:", response)
+except KeyboardInterrupt:
+    print("\nSession ended.")
 
-result = route_and_respond("I feel depressed and anxious.")
-print("Chat request result:", result)
+# result = route_and_respond("I feel depressed and anxious.")
+# print("Chat request result:", result)
+# Ask Karan for date tomorrow at 5 PM
