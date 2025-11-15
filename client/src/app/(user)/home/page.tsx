@@ -135,7 +135,7 @@ const ChatPanel = () => {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="rounded-lg bg-amber-200 p-2 text-amber-900"><HeartPulse className="h-4 w-4" /></div>
-          <div className="text-sm font-semibold text-stone-800">Serene Assistant</div>
+          <div className="text-sm font-semibold text-stone-800">Aashaa Assistant</div>
         </div>
         <div className="text-xs text-stone-500">Be kind to yourself today ♡</div>
       </div>

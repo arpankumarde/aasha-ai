@@ -101,8 +101,8 @@ export default function SidebarWrapper({
       <div className="flex min-h-screen w-full bg-[#FEF4D6]">
         <AppSidebar />
         <main className="flex-1 flex flex-col">
-          <header className="sticky top-0 z-10 border-b border-[#D9C8BA] bg-[#FCF8F4]/80 backdrop-blur px-6 py-4">
-            <div className="flex items-center gap-4">
+          <header className="sticky top-0 z-10 border-b border-[#D9C8BA] bg-[#FCF8F4]/80 backdrop-blur px-5 py-4">
+            <div className="flex items-center gap-3">
               <SidebarTrigger className="text-[#6B4F4F] hover:bg-[#F1E6DD]" />
               <h1 className="text-lg font-semibold text-[#4B3A34]">
                 Welcome to Aashaa
