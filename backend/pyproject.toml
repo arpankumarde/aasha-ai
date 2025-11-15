@@ -6,6 +6,9 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "flask>=3.1.2",
+    "langchain-community>=0.4.1",
+    "langchain-mongodb>=0.7.1",
+    "langchain-text-splitters>=1.0.0",
     "langchain[openai]>=1.0.7",
     "litellm>=1.79.3",
     "ollama>=0.6.1",
