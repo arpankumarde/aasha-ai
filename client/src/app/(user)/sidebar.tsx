@@ -81,7 +81,7 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-[#D9C8BA] bg-[#FBF7F2] p-4">
+      <SidebarFooter className="border-t border-[#D9C8BA] bg-brown-50 p-4">
         <div className="text-xs text-[#8B5E34] text-center">
           <p className="font-medium">Aashaa Mental Wellness</p>
           <p className="text-[#A68B7C] mt-1">© 2024 All rights reserved</p>
@@ -98,7 +98,7 @@ export default function SidebarWrapper({
 }) {
   return (
     <SidebarProvider>
-      <div className="flex min-h-screen w-full bg-[#FEF4D6]">
+      <div className="flex min-h-screen w-full bg-brown-50">
         <AppSidebar />
         <main className="flex-1 flex flex-col">
           <header className="sticky top-0 z-10 border-b border-[#D9C8BA] bg-[#FCF8F4]/80 backdrop-blur px-5 py-4">

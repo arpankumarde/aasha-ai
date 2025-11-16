@@ -170,67 +170,70 @@ export default function Home() {
       </section>
 
       {/* PRICING SECTION */}
-      <section id="pricing" className="max-w-7xl mx-auto px-6 lg:px-8 py-20">
-        <div className="grid md:grid-cols-2 gap-12 items-start">
+     <section id="pricing" className="max-w-7xl mx-auto px-6 lg:px-8 py-20">
+  <div className="grid md:grid-cols-2 gap-12 items-start">
 
-          {/* LEFT SIDE TEXT */}
-          <div>
-            <h2 className="text-3xl font-bold text-[#4B3A34]">
-              Support that fits your journey — clear and simple
-            </h2>
+    {/* LEFT TEXT */}
+    <div>
+      <h2 className="text-3xl font-bold text-[#4B3A34]">
+        Support that fits your journey — clear and simple
+      </h2>
 
-            <p className="mt-4 text-[#6B4F4F] text-lg">
-              Choose the level of support that feels right for your emotional wellness.
-            </p>
+      <p className="mt-4 text-[#6B4F4F] text-lg">
+        Choose between cloud-based support or a fully private offline experience.
+      </p>
 
-            <button className="mt-6 px-6 py-2 text-white bg-[#4B3A34] rounded-md hover:bg-[#3C2E2A]">
-              Learn More
-            </button>
-          </div>
+      <button className="mt-6 px-6 py-2 text-white bg-[#4B3A34] rounded-md hover:bg-[#3C2E2A]">
+        Learn More
+      </button>
+    </div>
 
-          {/* RIGHT — 3 CARDS */}
-          <div className="grid md:grid-cols-3 gap-6">
+    {/* RIGHT — ONLY 2 CARDS */}
+    <div className="grid md:grid-cols-2 gap-6">
 
-            <PricingCard
-              title="Free Care"
-              price="₹0"
-              color="#FCF8F4"
-              items={[
-                "Unlimited AI chat",
-                "Daily affirmations",
-                "Emotional check-ins",
-              ]}
-              filled={false}
-            />
+      {/* NORMAL VERSION */}
+      <div className="rounded-xl border border-[#C9B8A8] bg-[#FCF8F4] p-6 shadow-sm text-center">
+        <h3 className="font-semibold text-lg text-[#4B3A34]">Normal Version</h3>
 
-            <PricingCard
-              title="Mentor Session"
-              price="₹499"
-              color="white"
-              items={[
-                "45-min mentor call",
-                "Follow-up guidance",
-                "Personalized plan",
-              ]}
-              filled={true}
-            />
+        <p className="mt-3 text-3xl font-bold text-[#4B3A34]">₹899</p>
+        <p className="text-sm text-[#6B4F4F]">Runs on Cloud Server</p>
 
-            <PricingCard
-              title="Monthly Care"
-              price="₹1699"
-              color="#F7EFE7"
-              items={[
-                "4 mentor calls",
-                "Unlimited AI chats",
-                "Weekly tasks",
-                "Priority support",
-              ]}
-              filled={false}
-            />
+        <ul className="mt-5 text-sm text-[#6B4F4F] space-y-1 text-left inline-block">
+          <li>• Unlimited AI Chat</li>
+          <li>• Daily Affirmations</li>
+          <li>• Emotional Check-ins</li>
+          <li>• Basic Data Protection</li>
+        </ul>
 
-          </div>
-        </div>
-      </section>
+        <button className="mt-6 w-full border border-[#6B4F4F] text-[#6B4F4F] py-2 rounded-md hover:bg-[#6B4F4F] hover:text-white transition-all">
+          Start Free
+        </button>
+      </div>
+
+      {/* PREMIUM — LOCAL & SECURE */}
+      <div className="rounded-xl border border-[#C9B8A8] bg-[#F7EFE7] p-6 shadow-sm text-center">
+        <h3 className="font-semibold text-lg text-[#4B3A34]">Premium (Offline)</h3>
+
+        <p className="mt-3 text-3xl font-bold text-[#4B3A34]">₹599</p>
+        <p className="text-sm text-[#6B4F4F]">Runs Completely on Device</p>
+
+        <ul className="mt-5 text-sm text-[#6B4F4F] space-y-1 text-left inline-block">
+          <li>• AI runs locally — zero cloud usage</li>
+          <li>• No data leaves your device</li>
+          <li>• Offline mentor guidance</li>
+          <li>• Encrypted local storage</li>
+        </ul>
+
+        <button className="mt-6 w-full bg-[#6B4F4F] text-white py-2 rounded-md hover:bg-[#5a4242] transition-all">
+          Get Premium
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
 
       {/* TESTIMONIALS */}
       <section id="testimonials" className="max-w-7xl mx-auto px-6 lg:px-8 py-12">

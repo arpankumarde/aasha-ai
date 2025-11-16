@@ -72,6 +72,7 @@ import {
 } from "recharts";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 // --- Mock data ---
 const moodData = [
@@ -93,13 +94,32 @@ const heroStats = [
   { label: "Mindful streak", value: "12 days", helper: "+2 vs last week" },
   { label: "Avg mood today", value: "4.3 / 5", helper: "Stable & grounded" },
   { label: "Deep breaths logged", value: "36", helper: "Keep the rhythm" },
-  { label: "Gratitude notes", value: "3 entries", helper: "Morning ritual done" },
+  {
+    label: "Gratitude notes",
+    value: "3 entries",
+    helper: "Morning ritual done",
+  },
 ];
 
 const highlightMetrics = [
-  { label: "Mindful minutes", value: "24 min", detail: "+6 min today", icon: Clock },
-  { label: "Energy balance", value: "80%", detail: "Calm & steady", icon: Leaf },
-  { label: "Journal streak", value: "5 days", detail: "Keep reflecting", icon: NotebookPen },
+  {
+    label: "Mindful minutes",
+    value: "24 min",
+    detail: "+6 min today",
+    icon: Clock,
+  },
+  {
+    label: "Energy balance",
+    value: "80%",
+    detail: "Calm & steady",
+    icon: Leaf,
+  },
+  {
+    label: "Journal streak",
+    value: "5 days",
+    detail: "Keep reflecting",
+    icon: NotebookPen,
+  },
 ];
 
 // --- Small helpers ---
@@ -112,7 +132,7 @@ const BentoCard = ({ children, className = "" }) => (
 );
 
 const SectionTitle = ({
-icon: Icon,
+  icon: Icon,
   title,
   action = null,
 }: {
@@ -120,16 +140,16 @@ icon: Icon,
   title: any;
   action?: any;
 }) => (
-   <div className="mb-3 flex items-center justify-between">
-     <div className="flex items-center gap-2">
-       <div className="rounded-xl bg-amber-100 p-2 text-amber-800">
-         <Icon className="h-4 w-4" />
-       </div>
-       <h3 className="text-sm font-medium text-stone-800">{title}</h3>
-     </div>
-     {action}
-   </div>
- );
+  <div className="mb-3 flex items-center justify-between">
+    <div className="flex items-center gap-2">
+      <div className="rounded-xl bg-amber-100 p-2 text-amber-800">
+        <Icon className="h-4 w-4" />
+      </div>
+      <h3 className="text-sm font-medium text-stone-800">{title}</h3>
+    </div>
+    {action}
+  </div>
+);
 
 // --- Hero and highlight sections ---
 const HeroSection = () => (
@@ -146,28 +166,33 @@ const HeroSection = () => (
             Your space is steady, calm, and ready for today.
           </h1>
           <p className="mt-3 text-sm text-[#6B4F4F]/80 sm:text-base">
-            Track your rituals, lean on the assistant, and celebrate the micro-wins that keep your nervous system balanced.
+            Track your rituals, lean on the assistant, and celebrate the
+            micro-wins that keep your nervous system balanced.
           </p>
           <div className="mt-5 flex flex-wrap gap-2 text-xs font-medium text-[#6B4F4F]">
-            {["Morning grounding", "Mindful movement", "Gratitude pulse"].map((pill) => (
-              <span
-                key={pill}
-                className="rounded-full border border-white/50 bg-white/40 px-3 py-1 backdrop-blur-sm"
-              >
-                {pill}
-              </span>
-            ))}
+            {["Morning grounding", "Mindful movement", "Gratitude pulse"].map(
+              (pill) => (
+                <span
+                  key={pill}
+                  className="rounded-full border border-white/50 bg-white/40 px-3 py-1 backdrop-blur-sm"
+                >
+                  {pill}
+                </span>
+              )
+            )}
           </div>
           <div className="mt-6 flex flex-wrap gap-3">
             <Button className="rounded-2xl bg-white text-[#7B4E2C] shadow-sm hover:bg-white/90">
               Start live check-in
             </Button>
             <Button
-              variant="outline"
-              className="rounded-2xl border-white/60 bg-transparent text-white hover:bg-white/10 hover:text-white"
+              asChild
+              className="rounded-2xl border-white/60 bg-[#7B4E2C]/90 hover:bg-[#7B4E2C]"
             >
-              Evening ritual plan
-              <ChevronRight className="ml-2 h-4 w-4" />
+              <Link href="/chat">
+                Evening ritual plan
+                <ChevronRight className="ml-2 h-4 w-4" />
+              </Link>
             </Button>
           </div>
         </div>
@@ -180,7 +205,9 @@ const HeroSection = () => (
               <p className="text-xs font-medium uppercase tracking-widest text-[#6B4F4F]/70">
                 {stat.label}
               </p>
-              <p className="mt-2 text-2xl font-semibold text-[#4B3A34]">{stat.value}</p>
+              <p className="mt-2 text-2xl font-semibold text-[#4B3A34]">
+                {stat.value}
+              </p>
               <p className="text-xs text-[#775944]">{stat.helper}</p>
               <div className="mt-4 h-1.5 w-full rounded-full bg-white/40">
                 <div
@@ -209,7 +236,9 @@ const HighlightsRow = () => (
             <p className="text-xs font-medium uppercase tracking-[0.2em] text-stone-500">
               {metric.label}
             </p>
-            <p className="text-2xl font-semibold text-stone-800">{metric.value}</p>
+            <p className="text-2xl font-semibold text-stone-800">
+              {metric.value}
+            </p>
             <p className="text-xs text-stone-500">{metric.detail}</p>
           </div>
         </div>
@@ -238,43 +267,62 @@ const ChatPanel = () => {
     setInput("");
   };
   return (
-  <BentoCard className="col-span-12">
-    <div className="flex flex-col gap-3">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="rounded-lg bg-amber-200 p-2 text-amber-900"><HeartPulse className="h-4 w-4" /></div>
-          <div className="text-sm font-semibold text-stone-800">Aashaa Assistant</div>
+    <BentoCard className="col-span-12">
+      <div className="flex flex-col gap-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="rounded-lg bg-amber-200 p-2 text-amber-900">
+              <HeartPulse className="h-4 w-4" />
+            </div>
+            <div className="text-sm font-semibold text-stone-800">
+              Aashaa Assistant
+            </div>
+          </div>
+          <div className="text-xs text-stone-500">
+            Be kind to yourself today ♡
+          </div>
         </div>
-        <div className="text-xs text-stone-500">Be kind to yourself today ♡</div>
-      </div>
-      <div className="grid gap-2">
-        <div className="max-w-xl rounded-xl bg-amber-50 p-3 text-sm text-stone-800">Hi! Want a 2‑minute grounding exercise?</div>
-        <div className="ml-auto max-w-xl rounded-xl bg-stone-200 p-3 text-sm text-stone-800">Yes, and suggest an evening routine.</div>
-      </div>
-      <div className="flex flex-wrap gap-2 text-xs">
-        {["Plan a shorter ritual", "Ask for a sleep story", "Note today’s gratitude"].map((prompt) => (
-          <button
-            key={prompt}
-            onClick={() => setInput(prompt)}
-            className="rounded-full border border-stone-200 bg-white/80 px-3 py-1 text-stone-600 transition hover:border-amber-200 hover:text-stone-800"
-          >
-            {prompt}
-          </button>
-        ))}
-      </div>
-      <div className="mt-2 flex items-center gap-2">
-        <input value={input} onChange={(e) => setInput(e.target.value)}
+        <div className="grid gap-2">
+          <div className="max-w-xl rounded-xl bg-amber-50 p-3 text-sm text-stone-800">
+            Hi! Want a 2‑minute grounding exercise?
+          </div>
+          <div className="ml-auto max-w-xl rounded-xl bg-stone-200 p-3 text-sm text-stone-800">
+            Yes, and suggest an evening routine.
+          </div>
+        </div>
+        <div className="flex flex-wrap gap-2 text-xs">
+          {[
+            "Plan a shorter ritual",
+            "Ask for a sleep story",
+            "Note today’s gratitude",
+          ].map((prompt) => (
+            <button
+              key={prompt}
+              onClick={() => setInput(prompt)}
+              className="rounded-full border border-stone-200 bg-white/80 px-3 py-1 text-stone-600 transition hover:border-amber-200 hover:text-stone-800"
+            >
+              {prompt}
+            </button>
+          ))}
+        </div>
+        <div className="mt-2 flex items-center gap-2">
+          <input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleSend()}
-          placeholder="Ask anything…"
-          className="flex-1 rounded-xl border border-stone-200 bg-white/90 px-3 py-2 text-sm outline-none placeholder:text-stone-400"
-        />
-        <Button className="rounded-xl bg-[#7B4E2C] text-amber-50 hover:bg-[#6B3F21]" onClick={handleSend}>
-          Send
-        </Button>
+            placeholder="Ask anything…"
+            className="flex-1 rounded-xl border border-stone-200 bg-white/90 px-3 py-2 text-sm outline-none placeholder:text-stone-400"
+          />
+          <Button
+            className="rounded-xl bg-[#7B4E2C] text-amber-50 hover:bg-[#6B3F21]"
+            onClick={handleSend}
+          >
+            Send
+          </Button>
+        </div>
       </div>
-    </div>
-  </BentoCard>
-);
+    </BentoCard>
+  );
 };
 
 // --- Widgets (reduced to 2 rows) ---
@@ -283,15 +331,39 @@ const MoodTracker = () => (
     <SectionTitle
       icon={Smile}
       title="Mood tracker"
-      action={<Badge variant="secondary" className="bg-amber-100 text-amber-900">7‑day</Badge>}
+      action={
+        <Badge variant="secondary" className="bg-amber-100 text-amber-900">
+          7‑day
+        </Badge>
+      }
     />
     <div className="h-36">
       <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={moodData} margin={{ left: 0, right: 0, top: 10, bottom: 0 }}>
-          <XAxis dataKey="day" tickLine={false} axisLine={false} stroke="#78716c" />
+        <LineChart
+          data={moodData}
+          margin={{ left: 0, right: 0, top: 10, bottom: 0 }}
+        >
+          <XAxis
+            dataKey="day"
+            tickLine={false}
+            axisLine={false}
+            stroke="#78716c"
+          />
           <YAxis hide domain={[0, 5]} />
-          <Tooltip contentStyle={{ background: "#fff", border: "1px solid #e7e5e4", color: "#44403c" }} />
-          <Line type="monotone" dataKey="mood" stroke="#92400e" strokeWidth={2} dot={false} />
+          <Tooltip
+            contentStyle={{
+              background: "#fff",
+              border: "1px solid #e7e5e4",
+              color: "#44403c",
+            }}
+          />
+          <Line
+            type="monotone"
+            dataKey="mood"
+            stroke="#92400e"
+            strokeWidth={2}
+            dot={false}
+          />
         </LineChart>
       </ResponsiveContainer>
     </div>
@@ -307,11 +379,18 @@ const DailyCheckIn = () => (
     <SectionTitle
       icon={Sparkles}
       title="Daily check‑in"
-      action={<Badge variant="secondary" className="rounded-full bg-amber-100 text-amber-900">AM reset</Badge>}
+      action={
+        <Badge
+          variant="secondary"
+          className="rounded-full bg-amber-100 text-amber-900"
+        >
+          AM reset
+        </Badge>
+      }
     />
     <div className="grid gap-3">
       <div className="grid grid-cols-5 gap-2">
-        {["😞","🙁","😐","🙂","😄"].map((m,i)=> (
+        {["😞", "🙁", "😐", "🙂", "😄"].map((m, i) => (
           <button
             key={i}
             className="rounded-2xl border border-stone-200 bg-gradient-to-b from-white to-[#FCF3E8] py-3 text-xl transition hover:-translate-y-0.5 hover:border-amber-200"
@@ -325,7 +404,12 @@ const DailyCheckIn = () => (
         className="min-h-[84px] rounded-2xl border border-stone-200 bg-white/80 p-3 text-sm outline-none placeholder:text-stone-400"
       />
       <div className="flex items-center justify-between">
-        <Button size="sm" className="rounded-2xl bg-[#7B4E2C] text-amber-50 hover:bg-[#6B3F21]">Save check‑in</Button>
+        <Button
+          size="sm"
+          className="rounded-2xl bg-[#7B4E2C] text-amber-50 hover:bg-[#6B3F21]"
+        >
+          Save check‑in
+        </Button>
         <span className="text-xs text-stone-500">
           Streak: <span className="text-stone-800">5 days</span>
         </span>
@@ -342,13 +426,22 @@ const BreathingCoach = () => (
         <div className="absolute inset-2 rounded-full bg-white/60 blur-2xl" />
         <div className="absolute inset-4 rounded-full border border-white/50" />
         <div className="absolute inset-6 flex items-center justify-center rounded-full border border-white/70">
-          <span className="text-xs font-semibold text-[#7B4E2C]">4 • 4 • 4 • 4</span>
+          <span className="text-xs font-semibold text-[#7B4E2C]">
+            4 • 4 • 4 • 4
+          </span>
         </div>
       </div>
     </div>
     <div className="mt-3 grid grid-cols-3 gap-2">
-      {["Box","4‑7‑8","Coherence"].map((l)=> (
-        <Button key={l} variant="secondary" className="rounded-2xl bg-amber-100 text-amber-900 hover:bg-amber-200" size="sm">{l}</Button>
+      {["Box", "4‑7‑8", "Coherence"].map((l) => (
+        <Button
+          key={l}
+          variant="secondary"
+          className="rounded-2xl bg-amber-100 text-amber-900 hover:bg-amber-200"
+          size="sm"
+        >
+          {l}
+        </Button>
       ))}
     </div>
   </BentoCard>
@@ -371,7 +464,9 @@ const MeditationTimer = () => (
           <div className="text-xs text-stone-500">Guided • Calm body scan</div>
         </div>
       </div>
-      <Button className="rounded-2xl bg-[#7B4E2C] text-amber-50 hover:bg-[#6B3F21]">Start</Button>
+      <Button className="rounded-2xl bg-[#7B4E2C] text-amber-50 hover:bg-[#6B3F21]">
+        Start
+      </Button>
     </div>
   </BentoCard>
 );
@@ -381,33 +476,72 @@ const UpcomingSessions = () => (
     <SectionTitle icon={CalendarCheck} title="Upcoming sessions" />
     <div className="space-y-3">
       {sessions.map((s, i) => (
-        <div key={i} className="rounded-2xl border border-stone-200/80 bg-white/70 p-3">
+        <div
+          key={i}
+          className="rounded-2xl border border-stone-200/80 bg-white/70 p-3"
+        >
           <div className="text-sm font-semibold text-stone-800">{s.time}</div>
-          <div className="text-xs text-stone-500">{s.with} • {s.type}</div>
+          <div className="text-xs text-stone-500">
+            {s.with} • {s.type}
+          </div>
         </div>
       ))}
-      <Button variant="secondary" className="w-full rounded-2xl bg-amber-100 text-amber-900 hover:bg-amber-200" size="sm">Book a session</Button>
+      <Button
+        variant="secondary"
+        className="w-full rounded-2xl bg-amber-100 text-amber-900 hover:bg-amber-200"
+        size="sm"
+      >
+        Book a session
+      </Button>
     </div>
   </BentoCard>
 );
 
 const JournalQuick = () => (
   <BentoCard className="col-span-12 lg:col-span-6">
-    <SectionTitle icon={NotebookPen} title="Journal – quick entry" action={<Badge className="bg-amber-100 text-amber-900">Private</Badge>} />
+    <SectionTitle
+      icon={NotebookPen}
+      title="Journal – quick entry"
+      action={<Badge className="bg-amber-100 text-amber-900">Private</Badge>}
+    />
     <div className="grid gap-4 lg:grid-cols-3">
       <div className="lg:col-span-2">
-        <textarea className="h-28 w-full rounded-2xl border border-stone-200 bg-white/90 p-3 text-sm outline-none placeholder:text-stone-400" placeholder="What's on your mind?" />
+        <textarea
+          className="h-28 w-full rounded-2xl border border-stone-200 bg-white/90 p-3 text-sm outline-none placeholder:text-stone-400"
+          placeholder="What's on your mind?"
+        />
         <div className="mt-3 flex flex-wrap items-center gap-2">
-          <Button size="sm" className="rounded-2xl bg-[#7B4E2C] text-amber-50 hover:bg-[#6B3F21]">Add entry</Button>
-          <Button variant="secondary" size="sm" className="rounded-2xl bg-amber-100 text-amber-900 hover:bg-amber-200">Prompt</Button>
-          <span className="text-xs text-stone-500">Last updated 3 mins ago</span>
+          <Button
+            size="sm"
+            className="rounded-2xl bg-[#7B4E2C] text-amber-50 hover:bg-[#6B3F21]"
+          >
+            Add entry
+          </Button>
+          <Button
+            variant="secondary"
+            size="sm"
+            className="rounded-2xl bg-amber-100 text-amber-900 hover:bg-amber-200"
+          >
+            Prompt
+          </Button>
+          <span className="text-xs text-stone-500">
+            Last updated 3 mins ago
+          </span>
         </div>
       </div>
       <div className="space-y-2">
-        {["Gratitude","Wins","Worries"].map((tag)=> (
-          <div key={tag} className="flex items-center justify-between rounded-2xl border border-stone-200 bg-white/70 p-3 text-sm text-stone-800">
+        {["Gratitude", "Wins", "Worries"].map((tag) => (
+          <div
+            key={tag}
+            className="flex items-center justify-between rounded-2xl border border-stone-200 bg-white/70 p-3 text-sm text-stone-800"
+          >
             <span>{tag}</span>
-            <Badge variant="secondary" className="rounded-full bg-amber-100 text-amber-900">New</Badge>
+            <Badge
+              variant="secondary"
+              className="rounded-full bg-amber-100 text-amber-900"
+            >
+              New
+            </Badge>
           </div>
         ))}
       </div>
@@ -425,7 +559,10 @@ const GoalsWidget = () => (
         { label: "Walk 6k steps", progress: 85 },
       ].map((g, i) => (
         <div key={i}>
-          <div className="mb-1 flex items-center justify-between text-sm text-stone-700"><span>{g.label}</span><span>{g.progress}%</span></div>
+          <div className="mb-1 flex items-center justify-between text-sm text-stone-700">
+            <span>{g.label}</span>
+            <span>{g.progress}%</span>
+          </div>
           <div className="h-2 rounded-full bg-stone-200">
             <div
               className="h-full rounded-full bg-gradient-to-r from-[#B2704E] to-[#E0AA7D]"
@@ -440,11 +577,21 @@ const GoalsWidget = () => (
 
 const NudgesWidget = () => (
   <BentoCard className="col-span-12 md:col-span-6 lg:col-span-3">
-    <SectionTitle icon={MessageSquareHeart} title="Gentle nudges" action={<Switch />} />
+    <SectionTitle
+      icon={MessageSquareHeart}
+      title="Gentle nudges"
+      action={<Switch />}
+    />
     <div className="space-y-2 text-sm text-stone-800">
-      <div className="rounded-2xl border border-stone-200 bg-gradient-to-r from-white to-[#FCF3E8] p-3">Time for a 2‑minute breathing break?</div>
-      <div className="rounded-2xl border border-stone-200 bg-gradient-to-r from-white to-[#FCF3E8] p-3">Write one thing you’re grateful for.</div>
-      <div className="rounded-2xl border border-stone-200 bg-gradient-to-r from-white to-[#FCF3E8] p-3">Wind‑down mode starts in 1 hour.</div>
+      <div className="rounded-2xl border border-stone-200 bg-gradient-to-r from-white to-[#FCF3E8] p-3">
+        Time for a 2‑minute breathing break?
+      </div>
+      <div className="rounded-2xl border border-stone-200 bg-gradient-to-r from-white to-[#FCF3E8] p-3">
+        Write one thing you’re grateful for.
+      </div>
+      <div className="rounded-2xl border border-stone-200 bg-gradient-to-r from-white to-[#FCF3E8] p-3">
+        Wind‑down mode starts in 1 hour.
+      </div>
     </div>
   </BentoCard>
 );
@@ -457,15 +604,24 @@ export default function MentalWellnessDashboard() {
       <header className="sticky top-0 z-10 border-b border-stone-200/60 bg-[#FFF8F0]/80 backdrop-blur supports-[backdrop-filter]:bg-[#FFF8F0]/60">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
           <div className="flex items-center gap-2">
-            <div className="rounded-lg bg-amber-200 p-2 text-amber-900"><HeartPulse className="h-5 w-5" /></div>
-            <span className="text-sm font-semibold tracking-wide text-stone-800">Aashaa , Your mental wellness</span>
+            <div className="rounded-lg bg-amber-200 p-2 text-amber-900">
+              <HeartPulse className="h-5 w-5" />
+            </div>
+            <span className="text-sm font-semibold tracking-wide text-stone-800">
+              Aashaa , Your mental wellness
+            </span>
           </div>
           <div className="flex items-center gap-2">
             <input
               placeholder="Search exercises, notes, sessions…"
               className="w-72 rounded-2xl border border-white/60 bg-white/80 px-3 py-2 text-sm text-stone-700 shadow-inner outline-none placeholder:text-stone-400"
             />
-            <Button className="rounded-2xl bg-[#7B4E2C] text-amber-50 hover:bg-[#6B3F21]" variant="secondary">New entry</Button>
+            <Button
+              className="rounded-2xl bg-[#7B4E2C] text-amber-50 hover:bg-[#6B3F21]"
+              variant="secondary"
+            >
+              New entry
+            </Button>
           </div>
         </div>
       </header>
@@ -505,8 +661,12 @@ export default function MentalWellnessDashboard() {
           <div className="flex items-center gap-3">
             <span>© {new Date().getFullYear()} Serene</span>
             <span>•</span>
-            <a className="hover:text-stone-700" href="#">Privacy</a>
-            <a className="hover:text-stone-700" href="#">Terms</a>
+            <a className="hover:text-stone-700" href="#">
+              Privacy
+            </a>
+            <a className="hover:text-stone-700" href="#">
+              Terms
+            </a>
           </div>
           <div className="flex items-center gap-2">
             <Leaf className="h-4 w-4 text-amber-800" />
