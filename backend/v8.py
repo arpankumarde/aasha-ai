@@ -8,6 +8,7 @@ import numpy as np
 from langchain_openai import OpenAIEmbeddings
 from langchain_mongodb import MongoDBAtlasVectorSearch
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 import argparse
 
 # from transformers import pipeline
@@ -28,6 +29,7 @@ memory_collection = db["memory"]
 
 embedder = OpenAIEmbeddings(model="text-embedding-3-small")
 app = Flask(__name__)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 # try:
 #     sent_clf = pipeline(
