@@ -659,7 +659,7 @@ export default function MentalWellnessDashboard() {
 
         <footer className="mt-6 flex items-center justify-between text-xs text-stone-500">
           <div className="flex items-center gap-3">
-            <span>© {new Date().getFullYear()} Serene</span>
+            <span>© {new Date().getFullYear()} Aasha AI</span>
             <span>•</span>
             <a className="hover:text-stone-700" href="#">
               Privacy

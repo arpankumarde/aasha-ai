@@ -6,15 +6,10 @@ export interface ChatMessage {
 }
 
 export interface ChatRequest {
-  prompt: string;
-  history: Array<{
-    role: "user" | "assistant";
-    content: string;
-  }>;
+  message: string;
 }
 
 export interface ChatResponse {
-  prompt: string;
   response: string;
 }
 

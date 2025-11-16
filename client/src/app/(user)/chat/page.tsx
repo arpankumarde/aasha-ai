@@ -44,19 +44,12 @@ const Page = () => {
     setError(null);
 
     try {
-      // Format conversation history for the API
-      const conversationHistory = messages.map((msg) => ({
-        role: msg.role,
-        content: msg.content,
-      }));
-
       const requestData: ChatRequest = {
-        prompt: userMessage.content,
-        history: conversationHistory,
+        message: userMessage.content,
       };
 
       const { data } = await chatApi.post<ChatResponse>(
-        "/generate",
+        "/chat",
         requestData
       );
 
@@ -76,7 +69,6 @@ const Page = () => {
         "Failed to get response. Please try again.";
       setError(errorMessage);
 
-      // Optionally add error as a system message
       const errorSystemMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),
         role: "assistant",

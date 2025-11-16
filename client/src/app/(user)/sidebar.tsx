@@ -1,14 +1,15 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
+import * as React from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   Home,
   Settings,
   MessageSquareHeart,
   HeartHandshake,
-} from "lucide-react"
+  Calendar,
+} from "lucide-react";
 
 import {
   Sidebar,
@@ -23,7 +24,7 @@ import {
   SidebarMenuItem,
   SidebarProvider,
   SidebarTrigger,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
 
 const menuItems = [
   {
@@ -32,14 +33,19 @@ const menuItems = [
     icon: Home,
   },
   {
+    title: "Tasks",
+    url: "/tasks",
+    icon: Calendar,
+  },
+  {
     title: "Settings",
     url: "/settings",
     icon: Settings,
   },
-]
+];
 
 export function AppSidebar() {
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   return (
     <Sidebar className="border-r border-[#D9C8BA] bg-[#FCF8F4]">
@@ -84,17 +90,17 @@ export function AppSidebar() {
       <SidebarFooter className="border-t border-[#D9C8BA] bg-brown-50 p-4">
         <div className="text-xs text-[#8B5E34] text-center">
           <p className="font-medium">Aashaa Mental Wellness</p>
-          <p className="text-[#A68B7C] mt-1">© 2024 All rights reserved</p>
+          <p className="text-[#A68B7C] mt-1">© 2025 All rights reserved</p>
         </div>
       </SidebarFooter>
     </Sidebar>
-  )
+  );
 }
 
 export default function SidebarWrapper({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <SidebarProvider>
@@ -113,5 +119,5 @@ export default function SidebarWrapper({
         </main>
       </div>
     </SidebarProvider>
-  )
+  );
 }
