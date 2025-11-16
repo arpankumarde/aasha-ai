@@ -247,7 +247,9 @@ def call_chat_model(prompt: str) -> str:
         openai_api_base="https://llm.apps.growsoc.com/v1",
         max_completion_tokens=200,
         temperature=0.4,
-        top_p=0.9
+           top_p=0.85,           # ADD this constraint
+            frequency_penalty=0.5, # Reduce repetition
+            presence_penalty=0.2   # Encourage diverse but grounded responses
     )
     relevant_memories = fetch_relevant_memories(query_embedding)
     memory_context = format_memory_context(relevant_memories)
@@ -424,6 +426,21 @@ def chat_endpoint():
         print("Error handling /chat request:", err)
         return jsonify({"error": "failed to generate response"}), 500
     return jsonify({"response": response})
+
+
+@app.get("/tasks")
+def list_tasks():
+    """Return all scheduled tasks."""
+    try:
+        tasks = []
+        for doc in collection.find():
+            doc_copy = dict(doc)
+            doc_copy.pop("_id", None)
+            tasks.append(doc_copy)
+    except Exception as err:
+        print("Error fetching tasks:", err)
+        return jsonify({"error": "failed to fetch tasks"}), 500
+    return jsonify({"tasks": tasks})
 
 
 def run_cli():
